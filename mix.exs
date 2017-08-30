@@ -25,7 +25,7 @@ defmodule GoogleDirectionsGenerator.Mixfile do
 
   defp deps do
     [
-    {:google_maps, "~> 0.5"},
+    {:google_maps, git: "https://github.com/elixir-twister/ex_maps.git"},
     {:httpotion, "~> 3.0.2"},
     {:poison, "~> 2.0"}
     ]
