@@ -18,6 +18,45 @@ defmodule GoogleDirectionsGenerator do
   end
 
   @doc """
+  ## Send to the endpoint
+  """
+  def push(url, %{ count: count, delay: delay } \\ %{ count: 1, delay: 5 }) do
+    my_coords = current_lat_long()
+
+    headers = ["User-Agent": "Elixir",
+            "Content-Type": "application/x-www-form-urlencoded"]
+
+      params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
+
+      IO.puts "posting to " <> url
+
+      HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+for _ <- 1..count do
+
+    trip_coords = random
+
+    Enum.each(trip_coords, fn(x) ->
+
+        params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+
+        IO.puts "posting to " <> url
+
+        HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+        :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+
+        params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
+
+        HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+         :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+    end)
+
+end
+  end
+
+  @doc """
   ## Get a random place geocoords based on starting location
   """
   def random do
@@ -51,11 +90,13 @@ defmodule GoogleDirectionsGenerator do
     end)
 
 
-    trip_coords = create_route(locations)
+     create_route(locations)
   end
 
-  def get_coords(loc)do
-
+  @doc """
+  ## Get coordinates from a location result
+  """
+def get_coords(loc)do
 
 case loc do
   %{ lat: lat, lng: lng, name: name } -> loc
@@ -69,6 +110,9 @@ end
 
 end
 
+  @doc """
+  ## Create a driving route from location coords
+  """
 def create_route(locations) do
  key = Application.get_env(:google_directions_generator, :api_key)
 
@@ -91,8 +135,25 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&des
       start_map = %{ lat: start_loc["lat"], lng: start_loc["lng"] }
       end_loc = Map.get(x, "end_location")
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
-      %{ start_location: start_map, end_location: end_map }
+     %{ start_location: start_map, end_location: end_map }
       end)
 
 end
+
+  @doc """
+  ## get the coords of the current server
+  """
+def current_lat_long() do
+url = "https://ipapi.co/8.8.8.8/json"
+result = HTTPotion.get url
+json = result.body
+
+  decoded = Poison.decode!(json)
+
+  lat = to_string decoded["latitude"]
+  lng = to_string decoded["longitude"]
+
+  %{lat: lat, lng: lng }
+end
+
 end
