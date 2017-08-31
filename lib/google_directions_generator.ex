@@ -57,6 +57,53 @@ end
   end
 
   @doc """
+    ## Send to the endpoint
+    """
+    def push(url, %{ count: count, delay: delay }, custom_params) do
+      my_coords = current_lat_long()
+
+      headers = ["User-Agent": "Elixir",
+              "Content-Type": "application/x-www-form-urlencoded"]
+
+        params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
+
+        custom_params_list= Enum.Map(custom_params, fn(x) ->
+
+        %{key,val} = x
+        tostring(key) <> "=" <> tostring(val)
+         end
+
+         params = Enum.join(custom_params_list, params)
+
+        IO.puts "posting to " <> url
+
+        HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+  for _ <- 1..count do
+
+      trip_coords = random
+
+      Enum.each(trip_coords, fn(x) ->
+
+          params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+
+          IO.puts "posting to " <> url
+
+          HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+          :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+
+          params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
+
+          HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+           :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+      end)
+
+  end
+    end
+
+  @doc """
   ## Get a random place geocoords based on starting location
   """
   def random do
