@@ -71,7 +71,7 @@ end
 
         [k] = Map.keys(x)
 
-        %{key => val} = x
+        %{key: val} = x
 
         k <> "=" <> val
         end)
