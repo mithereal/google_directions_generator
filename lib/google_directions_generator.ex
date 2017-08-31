@@ -71,7 +71,7 @@ end
 
         {key, val} = x
 
-        k <> "=" <> val
+        key <> "=" <> val
         end)
 
          params = Enum.concat(custom_params_list, params)
