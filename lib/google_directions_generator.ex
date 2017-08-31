@@ -125,6 +125,7 @@ end
     type = Enum.random(@types)
 
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" <> lat <> "," <> lng <> "&radius=5000&type="<> type <>"&key=" <> key
+    IO.inspect(url, label: "url is")
     result = HTTPotion.post url
     json = result.body
 
