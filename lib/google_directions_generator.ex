@@ -168,8 +168,6 @@ def create_route(locations) do
  key = Application.get_env(:google_directions_generator, :api_key)
 
 chunked_locations = Enum.chunk(locations, 2)
-|>
-Enum.each(fn(x) ->
 
 url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Phoenix,AZ&key=" <> key
  result = HTTPotion.post url
@@ -190,7 +188,7 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&de
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
      %{ start_location: start_map, end_location: end_map }
       end)
-end)
+s
 end
 
   @doc """
