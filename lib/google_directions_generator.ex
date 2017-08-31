@@ -147,14 +147,15 @@ end
   ## Get coordinates from a location result
   """
 def get_coords(loc)do
-IO.inspect(loc, label: "loc")
+
 case loc do
   %{ lat: lat, lng: lng, name: name } -> loc
   _-> geometry = loc["geometry"]
       coords = geometry["location"]
       name = loc["name"]
+      vicinity = loc["vicinity"]
 
-      %{ name: name, lat: coords["lat"], lng: coords["lng"] }
+      %{ name: name, lat: coords["lat"], lng: coords["lng"], vicinity: vicinity }
 
 end
 
@@ -170,7 +171,7 @@ chunked_locations = Enum.chunk(locations, 2)
 |>
 Enum.each(fn(x) ->
 
-url = "https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&destination=Concord,MA&key=" <> key
+url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Phoenix,AZ&key=" <> key
  result = HTTPotion.post url
     json = result.body
     waypoints_json = Poison.decode!(json)
