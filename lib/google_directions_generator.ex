@@ -71,7 +71,7 @@ end
 
         %{key,val} = x
         tostring(key) <> "=" <> tostring(val)
-         end
+         end)
 
          params = Enum.join(custom_params_list, params)
 
