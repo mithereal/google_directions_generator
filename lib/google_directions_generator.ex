@@ -73,9 +73,11 @@ end
 
         IO.inspect(x, label: "x is ")
 
-#        [k] = Map.keys(x)
-#        %{key: val} = x
-#        k <> "=" <> val
+        [k] = Map.keys(x)
+
+        IO.inspect(k, label: "k is ")
+        %{key => val} = x
+        k <> "=" <> val
         end)
 
          params = Enum.join(custom_params_list, params)
