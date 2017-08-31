@@ -67,10 +67,11 @@ end
 
         params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
 
-        custom_params_list= Enum.Map(custom_params, fn(x) ->
+        custom_params_list= Enum.map(custom_params, fn(x) ->
 
-        %{key,val} = x
-        tostring(key) <> "=" <> tostring(val)
+        [k] = Map.keys(x)
+        %{key: val} = x
+        k <> "=" <> val
          end)
 
          params = Enum.join(custom_params_list, params)
