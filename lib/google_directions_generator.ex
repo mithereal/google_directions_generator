@@ -155,7 +155,7 @@ case loc do
       name = loc["name"]
       vicinity = loc["vicinity"]
 
-      %{ name: name, lat: coords["lat"], lng: coords["lng"]}
+      %{ name: name, lat: coords["lat"], lng: coords["lng"], vicinity: vicinity }
 
 end
 
@@ -168,8 +168,10 @@ def create_route(locations) do
  key = Application.get_env(:google_directions_generator, :api_key)
 
 chunked_locations = Enum.chunk(locations, 2)
-
-url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Phoenix,AZ&key=" <> key
+|>
+Enum.each(fn(x) do
+IO.inspect(x, label: "x is")
+url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Tucson,AZ&key=" <> key
  result = HTTPotion.post url
     json = result.body
     waypoints_json = Poison.decode!(json)
@@ -187,6 +189,9 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&de
       end_loc = Map.get(x, "end_location")
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
      %{ start_location: start_map, end_location: end_map }
+      end)
+
+
       end)
 
 end
