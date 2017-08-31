@@ -188,7 +188,7 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&de
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
      %{ start_location: start_map, end_location: end_map }
       end)
-s
+
 end
 
   @doc """
