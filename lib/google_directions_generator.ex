@@ -176,7 +176,7 @@ waypoints = Enum.map(chunked_locations, fn(x) ->
 first = List.first(x)
 last = List.last(x)
 
-url = "https://maps.googleapis.com/maps/api/directions/json?origin=" <> to_string(first.vicinity) <> "&destination=" <> to_string(last.vicinity) <> "&key=" <> key
+url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Tucson,AZ&key=" <> key
  result = HTTPotion.post url
     json = result.body
     waypoints_json = Poison.decode!(json)
