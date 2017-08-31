@@ -67,20 +67,16 @@ end
 
         params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
 
-        IO.inspect(custom_params, label: "custom_params is ")
-
         custom_params_list= Enum.map(custom_params, fn(x) ->
-
-        IO.inspect(x, label: "x is ")
 
         [k] = Map.keys(x)
 
-        IO.inspect(k, label: "k is ")
         %{key => val} = x
+
         k <> "=" <> val
         end)
 
-         params = Enum.join(custom_params_list, params)
+         params = Enum.concat(custom_params_list, params)
 
         IO.puts "posting to " <> url
 
