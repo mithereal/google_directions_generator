@@ -147,7 +147,7 @@ end
   ## Get coordinates from a location result
   """
 def get_coords(loc)do
-
+IO.inspect(loc, label: "loc")
 case loc do
   %{ lat: lat, lng: lng, name: name } -> loc
   _-> geometry = loc["geometry"]
@@ -167,8 +167,10 @@ def create_route(locations) do
  key = Application.get_env(:google_directions_generator, :api_key)
 
 chunked_locations = Enum.chunk(locations, 2)
+|>
+Enum.each(fn(x) ->
 
-url = "https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&destination=Concord,MA&waypoints=Charlestown,MA&key=" <> key
+url = "https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&destination=Concord,MA&key=" <> key
  result = HTTPotion.post url
     json = result.body
     waypoints_json = Poison.decode!(json)
@@ -187,7 +189,7 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&des
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
      %{ start_location: start_map, end_location: end_map }
       end)
-
+end)
 end
 
   @doc """
@@ -202,8 +204,17 @@ json = result.body
 
   lat = to_string decoded["latitude"]
   lng = to_string decoded["longitude"]
+  region = to_string decoded["region"]
+  region_code = to_string decoded["region_code"]
+  country = to_string decoded["country"]
+  country_name = to_string decoded["country_name"]
+  postal = to_string decoded["postal"]
+  timezone = to_string decoded["timezone"]
+  asn = to_string decoded["asn"]
+  org = to_string decoded["org"]
 
-  %{lat: lat, lng: lng }
+
+  %{lat: lat, lng: lng, region: region ,region_code: region_code ,country: country ,country_name: country_name ,postal: postal,timezone: timezone ,asn: asn, org: org }
 end
 
 end
