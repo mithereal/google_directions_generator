@@ -20,7 +20,7 @@ defmodule GoogleDirectionsGenerator do
   @doc """
   ## Send to the endpoint
   """
-  def push(url, %{ count: count, delay: delay } \\ %{ count: 1, delay: 5 }) do
+  def push(url, %{ count: count, delay: delay }) do
     my_coords = current_lat_long()
 
     headers = ["User-Agent": "Elixir",
