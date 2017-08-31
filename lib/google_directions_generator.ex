@@ -155,7 +155,7 @@ case loc do
       name = loc["name"]
       vicinity = loc["vicinity"]
 
-      %{ name: name, lat: coords["lat"], lng: coords["lng"], vicinity: vicinity }
+      %{ name: name, lat: coords["lat"], lng: coords["lng"]}
 
 end
 
@@ -214,8 +214,7 @@ json = result.body
   asn = to_string decoded["asn"]
   org = to_string decoded["org"]
 
-
-  %{lat: lat, lng: lng, region: region ,region_code: region_code ,country: country ,country_name: country_name ,postal: postal,timezone: timezone ,asn: asn, org: org }
+  %{lat: lat, lng: lng }
 end
 
 end
