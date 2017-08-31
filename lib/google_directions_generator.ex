@@ -87,6 +87,7 @@ end
       Enum.each(trip_coords, fn(x) ->
 
           params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+          params = Enum.concat(custom_params_list, params)
 
           IO.puts "posting to " <> url
 
@@ -95,6 +96,7 @@ end
           :timer.sleep(:timer.seconds(:rand.uniform(delay)))
 
           params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
+          params = Enum.concat(custom_params_list, params)
 
           HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
 
