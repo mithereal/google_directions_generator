@@ -171,10 +171,10 @@ def create_route(locations) do
 
 chunked_locations = Enum.chunk(locations, 2)
 
-waypoints = Enum.map(chunked_locations, fn(x) ->
-
-first = List.first(x)
-last = List.last(x)
+#waypoints = Enum.map(chunked_locations, fn(x) ->
+#
+#first = List.first(x)
+#last = List.last(x)
 
 url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Tucson,AZ&key=" <> key
  result = HTTPotion.post url
@@ -197,7 +197,7 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&de
       end)
 
 
-      end)
+#      end)
 
 end
 
