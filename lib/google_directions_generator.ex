@@ -140,7 +140,8 @@ end
     end)
 
 
-     create_route(locations)
+     rte = create_route(locations)
+     IO.inspect(rte, label: "route is")
   end
 
   @doc """
