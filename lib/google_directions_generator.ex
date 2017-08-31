@@ -67,12 +67,16 @@ end
 
         params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
 
+        IO.inspect(custom_params, label: "custom_params is ")
+
         custom_params_list= Enum.map(custom_params, fn(x) ->
 
-        [k] = Map.keys(x)
-        %{key: val} = x
-        k <> "=" <> val
-         end)
+        IO.inspect(x, label: "x is ")
+
+#        [k] = Map.keys(x)
+#        %{key: val} = x
+#        k <> "=" <> val
+        end)
 
          params = Enum.join(custom_params_list, params)
 
