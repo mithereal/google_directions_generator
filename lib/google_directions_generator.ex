@@ -142,6 +142,7 @@ end
 
 
      rte = create_route(locations)
+     IO.inspect(locations, label: "locations is")
      IO.inspect(rte, label: "route is")
   end
 
