@@ -27,7 +27,8 @@ defmodule GoogleDirectionsGenerator.Mixfile do
     [
     {:google_maps, git: "https://github.com/elixir-twister/ex_maps.git"},
     {:httpotion, "~> 3.0.2"},
-    {:poison, "~> 2.0"}
+    {:poison, "~> 2.0"},
+    {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
@@ -42,5 +43,9 @@ defmodule GoogleDirectionsGenerator.Mixfile do
        licenses: ["MIT"],
        links: %{"GitHub" => "https://github.com/mithereal/google_directions_generator"}]
     end
+
+    defp aliases do
+            [c: "compile"]
+      end
 
 end
