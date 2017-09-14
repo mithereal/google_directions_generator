@@ -14,6 +14,7 @@ defmodule GoogleDirectionsGenerator.Mixfile do
      description: description(),
      name: "Google Directions Generator",
      source_url: "https://github.com/mithereal/google_directions_generator",
+     aliases: aliases(),
      package: package()
      ]
   end
@@ -44,7 +45,7 @@ defmodule GoogleDirectionsGenerator.Mixfile do
        links: %{"GitHub" => "https://github.com/mithereal/google_directions_generator"}]
     end
 
-    defp aliases do
+    defp aliases() do
             [c: "compile"]
       end
 
