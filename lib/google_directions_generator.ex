@@ -221,7 +221,7 @@ def create_route(locations) do
 
 chunked_locations = Enum.chunk(locations, 2)
 
-continue = case Enum.coun(chunked_locations) > 0 do
+continue = case Enum.count(chunked_locations) > 0 do
 true -> true
 false -> false
 end
