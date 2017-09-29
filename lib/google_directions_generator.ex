@@ -222,6 +222,7 @@ def create_route(locations) do
 chunked_locations = Enum.chunk(locations, 2)
 
 first_location = List.first(chunked_locations)
+IO.inspect(first_location, label: "first loc")
 first_location_var = List.first(first_location)
 
 last_location = List.last(chunked_locations)
