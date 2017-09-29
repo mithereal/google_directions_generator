@@ -234,7 +234,7 @@ first_location_var = List.first(first_location)
 last_location = List.last(chunked_locations)
 last_location_var = List.last(last_location)
 
-url = "https://maps.googleapis.com/maps/api/directions/json?origin="<> first_location.vicinity <>"&destination="<> last_location.vicinity <>"&key=" <> key
+url = "https://maps.googleapis.com/maps/api/directions/json?origin="<> first_location_var.vicinity <>"&destination="<> last_location_var.vicinity <>"&key=" <> key
 
  result = HTTPotion.post url
     json = result.body
