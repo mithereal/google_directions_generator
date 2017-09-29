@@ -107,6 +107,56 @@ end
     end
 
   @doc """
+    ## Send to the endpoint
+    """
+    def push(url, %{ count: count, delay: delay }, custom_params, origin) do
+      my_coords = origin
+
+      headers = ["User-Agent": "Elixir",
+              "Content-Type": "application/x-www-form-urlencoded"]
+
+        params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
+
+        custom_params_list= Enum.map(custom_params, fn(x) ->
+
+        {key, val} = x
+
+        key <> "=" <> val
+        end)
+
+         params = Enum.concat(custom_params_list, params)
+
+        IO.puts "posting to " <> url
+
+        HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+  for _ <- 1..count do
+
+      trip_coords = random
+
+      Enum.each(trip_coords, fn(x) ->
+
+          params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+          params = Enum.concat(custom_params_list, params)
+
+          IO.puts "posting to " <> url
+
+          HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+          :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+
+          params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
+          params = Enum.concat(custom_params_list, params)
+
+          HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+
+           :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+      end)
+
+  end
+    end
+
+  @doc """
   ## Get a random place geocoords based on starting location
   """
   def random do
@@ -125,7 +175,7 @@ end
     type = Enum.random(@types)
 
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" <> lat <> "," <> lng <> "&radius=5000&type="<> type <>"&key=" <> key
-    IO.inspect(url, label: "url is")
+
     result = HTTPotion.post url
     json = result.body
 
@@ -142,8 +192,7 @@ end
 
 
      rte = create_route(locations)
-     IO.inspect(locations, label: "locations is")
-     IO.inspect(rte, label: "route is")
+
   end
 
   @doc """
@@ -172,12 +221,15 @@ def create_route(locations) do
 
 chunked_locations = Enum.chunk(locations, 2)
 
-#waypoints = Enum.map(chunked_locations, fn(x) ->
-#
-#first = List.first(x)
-#last = List.last(x)
+first_location = List.first(chunked_locations)
+first_location_var = List.first(chunked_locations)
 
-url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Tucson,AZ&key=" <> key
+last_location = List.last(chunked_locations)
+last_location_var = List.last(last_location)
+
+
+url = "https://maps.googleapis.com/maps/api/directions/json?origin="<> first_location.vicinity <>"&destination="<> last_location.vicinity <>"&key=" <> key
+
  result = HTTPotion.post url
     json = result.body
     waypoints_json = Poison.decode!(json)
@@ -197,8 +249,6 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&de
      %{ start_location: start_map, end_location: end_map }
       end)
 
-
-#      end)
 
 end
 
