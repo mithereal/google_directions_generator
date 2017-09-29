@@ -221,15 +221,14 @@ def create_route(locations) do
 
 chunked_locations = Enum.chunk(locations, 2)
 
-first_location = List.first(chunked_locations)
-
-continue = case is_nil first_location do
+continue = case is_nil chunked_locations do
 true -> false
 false -> true
 end
 
 case continue do
 true ->
+first_location = List.first(chunked_locations)
 first_location_var = List.first(first_location)
 
 last_location = List.last(chunked_locations)
