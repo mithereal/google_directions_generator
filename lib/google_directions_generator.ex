@@ -224,6 +224,8 @@ chunked_locations = Enum.chunk(locations, 2)
 first_location = List.first(chunked_locations)
 [first_location_var] = List.first(chunked_locations)
 
+IO.inspect(first_location_var, label: "flv")
+
 last_location = List.last(chunked_locations)
 [last_location_var] = List.last(last_location)
 
