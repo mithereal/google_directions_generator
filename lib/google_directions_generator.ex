@@ -106,8 +106,7 @@ end
   end
     end
     
-      end
-    end
+    
 
   @doc """
     ## Send to the endpoint
