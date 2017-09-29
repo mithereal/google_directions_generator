@@ -222,7 +222,14 @@ def create_route(locations) do
 chunked_locations = Enum.chunk(locations, 2)
 
 first_location = List.first(chunked_locations)
-IO.inspect(first_location, label: "first loc")
+
+continue = case is_nil first_location do
+true -> false
+false -> true
+end
+
+case continue do
+true ->
 first_location_var = List.first(first_location)
 
 last_location = List.last(chunked_locations)
@@ -248,6 +255,10 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin="<> first_loc
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
      %{ start_location: start_map, end_location: end_map }
       end)
+      
+false -> nil
+end
+
 
 
 end
