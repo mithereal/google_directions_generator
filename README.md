@@ -1,5 +1,8 @@
 # GoogleDirectionsGenerator
 
+[![Build Status](https://travis-ci.org/mithereal/google-directions-generator.svg?branch=master)](https://travis-ci.org/mithereal/google-directions-generator)
+
+
 ### This is an app for testing api's
 
 #### This will use google locations to fetch the geo-coords for driving directions between random multiple locations near you
