@@ -10,10 +10,11 @@
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `google_directions_generator` to your list of dependencies in `mix.exs`:
+If [available in Hex](https://hex.pm/packages/google_directions_generator), the package can be installed
+by adding google_directions_generator to your list of dependencies in `mix.exs`:
 
-you will need a google api key, you can add to your config ie. ' config :google_directions_generator, api_key:xxx '
+you will need a google api key, you can add to your config ie. 
+``` config :google_directions_generator, api_key:xxx ```
 
 ```elixir
 def deps do
