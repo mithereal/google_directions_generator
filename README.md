@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/mithereal/google-directions-generator.svg?branch=master)](https://travis-ci.org/mithereal/google-directions-generator)
 
+[![Inline docs](http://inch-ci.org/github/mithereal/google-directions-generator.svg)](http://inch-ci.org/github/mithereal/google-directions-generator)
+
 
 ### This is an app for testing api's
 
