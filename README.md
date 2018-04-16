@@ -1,6 +1,7 @@
 # GoogleDirectionsGenerator
 
 [![Build Status](https://travis-ci.org/mithereal/google-directions-generator.svg?branch=master)](https://travis-ci.org/mithereal/google-directions-generator)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmithereal%2Fgoogle_directions_generator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmithereal%2Fgoogle_directions_generator?ref=badge_shield)
 
 [![Inline docs](http://inch-ci.org/github/mithereal/google-directions-generator.svg)](http://inch-ci.org/github/mithereal/google-directions-generator)
 
@@ -28,3 +29,7 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/google_directions_generator](https://hexdocs.pm/google_directions_generator).
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmithereal%2Fgoogle_directions_generator.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmithereal%2Fgoogle_directions_generator?ref=badge_large)
