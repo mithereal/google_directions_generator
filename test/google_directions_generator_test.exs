@@ -2,7 +2,12 @@ defmodule GoogleDirectionsGeneratorTest do
   use ExUnit.Case
   doctest GoogleDirectionsGenerator
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "GoogleDirectionsGenerator.run()" do
+    coords = GoogleDirectionsGenerator.run()
+    result = case Enum.count(coords) > 0 do
+      true -> true
+      _-> false
+    end
+    assert result == true
   end
 end

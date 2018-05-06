@@ -3,16 +3,13 @@ defmodule GoogleDirectionsGenerator do
   Generate Geoocords for random locations located nearby
   """
 
-  @doc """
-  ## Run The Module
-
-  """
-
   @types  [
 "accounting", "airport", "amusement_park", "aquarium", "art_gallery", "atm", "bakery", "bank", "bar", "beauty_salon", "bicycle_store", "book_store", "bowling_alley", "bus_station", "cafe", "campground", "car_dealer", "car_rental", "car_repair", "car_wash", "casino", "cemetery", "church", "city_hall", "clothing_store", "convenience_store", "courthouse", "dentist", "department_store", "doctor", "electrician", "electronics_store", "embassy", "fire_station", "florist", "funeral_home", "furniture_store", "gas_station", "gym", "hair_care", "hardware_store", "hindu_temple", "home_goods_store", "hospital", "insurance_agency", "jewelry_store", "laundry", "lawyer", "library", "liquor_store", "local_government_office", "locksmith", "lodging", "meal_delivery", "meal_takeaway", "mosque", "movie_rental", "movie_theater", "moving_company", "museum", "night_club", "painter", "park", "parking", "pet_store", "pharmacy", "physiotherapist", "plumber", "police", "post_office", "real_estate_agency", "restaurant", "roofing_contractor", "rv_park", "school", "shoe_store", "shopping_mall", "spa", "stadium", "storage", "store", "subway_station", "synagogue", "taxi_stand", "train_station", "transit_station", "travel_agency", "university", "veterinary_care", "zoo"
   ]
 
-
+  @doc """
+  ## Run The Module and return a list of driving coords based on a nearby random location
+  """
   def run do
     random
   end
@@ -114,7 +111,7 @@ end
     def push(url, %{ count: count, delay: delay }, custom_params, origin) do
       my_coords = origin
 
-      headers = ["User-Agent": "Elixir",
+      headers = ["User-Agent": "Elixir - Google Directions Generator",
               "Content-Type": "application/x-www-form-urlencoded"]
 
         params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
@@ -165,11 +162,13 @@ end
 
     key = Application.get_env(:google_directions_generator, :api_key)
     url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" <> key
+
     result = HTTPotion.post url
     json = result.body
 
     decoded = Poison.decode!(json)
     coords = decoded["location"]
+
 
     lat = to_string coords["lat"]
     lng = to_string coords["lng"]
@@ -177,7 +176,7 @@ end
     type = Enum.random(@types)
 
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" <> lat <> "," <> lng <> "&radius=5000&type="<> type <>"&key=" <> key
-    IO.inspect(url, label: "url is")
+
     result = HTTPotion.post url
     json = result.body
 
@@ -194,8 +193,6 @@ end
 
 
      rte = create_route(locations)
-     IO.inspect(locations, label: "locations is")
-     IO.inspect(rte, label: "route is")
   end
 
   @doc """
@@ -224,11 +221,6 @@ def create_route(locations) do
 
 chunked_locations = Enum.chunk(locations, 2)
 
-#waypoints = Enum.map(chunked_locations, fn(x) ->
-#
-#first = List.first(x)
-#last = List.last(x)
-
 url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Tucson,AZ&key=" <> key
  result = HTTPotion.post url
     json = result.body
@@ -248,9 +240,6 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&de
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
      %{ start_location: start_map, end_location: end_map }
       end)
-
-
-#      end)
 
 end
 
