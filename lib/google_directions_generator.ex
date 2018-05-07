@@ -247,24 +247,33 @@ end
   ## get the coords of the current server
   """
 def current_lat_long() do
-url = "https://ipapi.co/8.8.8.8/json"
+url = "http://ipapi.co/8.8.8.8/json"
 result = HTTPotion.get url
 json = result.body
 
-  decoded = Poison.decode!(json)
+  decoded = Poison.decode(json)
 
-  lat = to_string decoded["latitude"]
-  lng = to_string decoded["longitude"]
-  region = to_string decoded["region"]
-  region_code = to_string decoded["region_code"]
-  country = to_string decoded["country"]
-  country_name = to_string decoded["country_name"]
-  postal = to_string decoded["postal"]
-  timezone = to_string decoded["timezone"]
-  asn = to_string decoded["asn"]
-  org = to_string decoded["org"]
+  is_json = case decoded do
+    {:error, msg} -> false
+    _-> true
+  end
 
-  %{lat: lat, lng: lng }
+return = case is_json do
+  false -> %{lat: 0, lng: 0 }
+  true ->  lat = to_string decoded["latitude"]
+           lng = to_string decoded["longitude"]
+           region = to_string decoded["region"]
+           region_code = to_string decoded["region_code"]
+           country = to_string decoded["country"]
+           country_name = to_string decoded["country_name"]
+           postal = to_string decoded["postal"]
+           timezone = to_string decoded["timezone"]
+           asn = to_string decoded["asn"]
+           org = to_string decoded["org"]
+
+           %{lat: lat, lng: lng }
+end
+
 end
 
 end
