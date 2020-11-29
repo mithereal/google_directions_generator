@@ -25,6 +25,6 @@ defmodule GoogleDirectionsGeneratorTest do
       [:ok] -> true
       _-> false
     end
-    assert result == true
+    assert result == false
   end
 end

@@ -7,6 +7,7 @@ defmodule GoogleDirectionsGenerator do
 "accounting", "airport", "amusement_park", "aquarium", "art_gallery", "atm", "bakery", "bank", "bar", "beauty_salon", "bicycle_store", "book_store", "bowling_alley", "bus_station", "cafe", "campground", "car_dealer", "car_rental", "car_repair", "car_wash", "casino", "cemetery", "church", "city_hall", "clothing_store", "convenience_store", "courthouse", "dentist", "department_store", "doctor", "electrician", "electronics_store", "embassy", "fire_station", "florist", "funeral_home", "furniture_store", "gas_station", "gym", "hair_care", "hardware_store", "hindu_temple", "home_goods_store", "hospital", "insurance_agency", "jewelry_store", "laundry", "lawyer", "library", "liquor_store", "local_government_office", "locksmith", "lodging", "meal_delivery", "meal_takeaway", "mosque", "movie_rental", "movie_theater", "moving_company", "museum", "night_club", "painter", "park", "parking", "pet_store", "pharmacy", "physiotherapist", "plumber", "police", "post_office", "real_estate_agency", "restaurant", "roofing_contractor", "rv_park", "school", "shoe_store", "shopping_mall", "spa", "stadium", "storage", "store", "subway_station", "synagogue", "taxi_stand", "train_station", "transit_station", "travel_agency", "university", "veterinary_care", "zoo"
   ]
 
+
   @doc """
   ## Run The Module and return a list of driving coords based on a nearby random location
   """
@@ -31,7 +32,7 @@ defmodule GoogleDirectionsGenerator do
 
 for _ <- 1..count do
 
-    trip_coords = random
+      {_,trip_coords} = random
 
     Enum.each(trip_coords, fn(x) ->
 
@@ -76,7 +77,8 @@ end
 
   for _ <- 1..count do
 
-      trip_coords = random
+        {_, trip_coords}  = random
+
 
       Enum.each(trip_coords, fn(x) ->
 
@@ -123,26 +125,30 @@ end
 
   for _ <- 1..count do
 
-      trip_coords = random
+        {status,trip_coords} = random
+case status do
+  :ok ->  Enum.each(trip_coords, fn(x) ->
 
-      Enum.each(trip_coords, fn(x) ->
+    params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+    params = Enum.concat(custom_params_list, params)
 
-          params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
-          params = Enum.concat(custom_params_list, params)
+    IO.puts "posting to " <> url
 
-          IO.puts "posting to " <> url
+    HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
 
-          HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+    :timer.sleep(:timer.seconds(:rand.uniform(delay)))
 
-          :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+    params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
+    params = Enum.concat(custom_params_list, params)
 
-          params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
-          params = Enum.concat(custom_params_list, params)
+    HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
 
-          HTTPotion.post url , [body: Enum.join(params, "&"), headers: headers]
+    :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+  end)
+  :error ->
+    {:error, trip_coords}
+        end
 
-           :timer.sleep(:timer.seconds(:rand.uniform(delay)))
-      end)
 
   end
     end
@@ -178,7 +184,11 @@ case error do
          decoded_json = Poison.decode!(json)
 
          reply = case decoded_json do
-           %{"html_attributions" => [], "results" => [], "status" => "ZERO_RESULTS"} -> random
+           %{"html_attributions" => [], "results" => [], "status" => "ZERO_RESULTS"} -> {status,reply } = random
+          result = case status do
+             :ok -> reply
+             :error -> []
+                  end
            _-> decoded_json["results"]
          end
 
