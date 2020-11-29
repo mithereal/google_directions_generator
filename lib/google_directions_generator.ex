@@ -20,7 +20,7 @@ defmodule GoogleDirectionsGenerator do
   def push(url, %{ count: count, delay: delay }) do
     my_coords = current_lat_long()
 
-    headers = ["User-Agent": "Elixir",
+    headers = ["User-Agent": "Elixir - Google Directions Generator",
             "Content-Type": "application/x-www-form-urlencoded"]
 
       params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
@@ -53,13 +53,10 @@ for _ <- 1..count do
 end
   end
 
-  @doc """
-    ## Send to the endpoint
-    """
     def push(url, %{ count: count, delay: delay }, custom_params) do
       my_coords = current_lat_long()
 
-      headers = ["User-Agent": "Elixir",
+      headers = ["User-Agent": "Elixir - Google Directions Generator",
               "Content-Type": "application/x-www-form-urlencoded"]
 
         params = ["lat=#{my_coords.lat}", "lng=#{my_coords.lng}"]
@@ -102,12 +99,7 @@ end
 
   end
     end
-    
-    
 
-  @doc """
-    ## Send to the endpoint
-    """
     def push(url, %{ count: count, delay: delay }, custom_params, origin) do
       my_coords = origin
 
@@ -167,32 +159,38 @@ end
     json = result.body
 
     decoded = Poison.decode!(json)
-    coords = decoded["location"]
+
+    error = decoded["error"]
+
+case error do
+  nil -> coords = decoded["location"]
+
+         lat = to_string coords["lat"]
+         lng = to_string coords["lng"]
+
+         type = Enum.random(@types)
+
+         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" <> lat <> "," <> lng <> "&radius=5000&type="<> type <>"&key=" <> key
+
+         result = HTTPotion.post url
+         json = result.body
+
+         decoded_json = Poison.decode!(json)
+
+         reply = case decoded_json do
+           %{"html_attributions" => [], "results" => [], "status" => "ZERO_RESULTS"} -> random
+           _-> decoded_json["results"]
+         end
+
+         locations  = Enum.map(reply, fn(x) ->
+           get_coords(x)
+         end)
 
 
-    lat = to_string coords["lat"]
-    lng = to_string coords["lng"]
-
-    type = Enum.random(@types)
-
-    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" <> lat <> "," <> lng <> "&radius=5000&type="<> type <>"&key=" <> key
-
-    result = HTTPotion.post url
-    json = result.body
-
-    decoded_json = Poison.decode!(json)
-
-    reply = case decoded_json do
-      %{"html_attributions" => [], "results" => [], "status" => "ZERO_RESULTS"} -> random
-      _-> decoded_json["results"]
+         rte = create_route(locations)
+         _-> {:error, error["message"]}
     end
 
-    locations  = Enum.map(reply, fn(x) ->
-    get_coords(x)
-    end)
-
-
-     rte = create_route(locations)
   end
 
   @doc """
@@ -219,9 +217,12 @@ end
 def create_route(locations) do
  key = Application.get_env(:google_directions_generator, :api_key)
 
+ case(Enum.count(locations) > 1) do
+   true ->
 chunked_locations = Enum.chunk(locations, 2)
 
 url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&destination=Tucson,AZ&key=" <> key
+
  result = HTTPotion.post url
     json = result.body
     waypoints_json = Poison.decode!(json)
@@ -240,7 +241,9 @@ url = "https://maps.googleapis.com/maps/api/directions/json?origin=Phoenix,AZ&de
       end_map = %{ lat: end_loc["lat"], lng: end_loc["lng"] }
      %{ start_location: start_map, end_location: end_map }
       end)
-
+{:ok, waypoints }
+   false -> {:error, "Locations must be greater then 2"}
+ end
 end
 
   @doc """
