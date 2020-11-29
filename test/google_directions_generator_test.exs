@@ -8,7 +8,7 @@ defmodule GoogleDirectionsGeneratorTest do
       :ok -> reply
       :error -> [{1,1,1}]
     end
-    result = case Enum.count(reply) > 0 do
+    result = case Enum.count(coords) > 0 do
       true -> true
       _-> false
     end
