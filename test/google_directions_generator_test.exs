@@ -3,8 +3,12 @@ defmodule GoogleDirectionsGeneratorTest do
   doctest GoogleDirectionsGenerator
 
   test "GoogleDirectionsGenerator.run()" do
-    coords = GoogleDirectionsGenerator.run()
-    result = case Enum.count(coords) > 0 do
+    {status, reply} = GoogleDirectionsGenerator.run()
+    coords = case status do
+      :ok -> reply
+      :error -> [{1,1,1}]
+    end
+    result = case Enum.count(reply) > 0 do
       true -> true
       _-> false
     end
