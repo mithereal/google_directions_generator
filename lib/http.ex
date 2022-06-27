@@ -14,12 +14,12 @@ defmodule GoogleDirectionsGenerator.Http do
   @key Application.get_env(:google_directions_generator, :api_key, "")
 
   def waypoints(%{origin: origin, destination: destination}) do
-    post("maps/api/directions/json?origin#{origin}&destination=#{origin}&key=#{@key}")
+    post("maps/api/directions/json?origin#{origin}&destination=#{origin}&key=#{@key}", [])
   end
 
   def nearby_search(%{lat: lat, lng: lng, radius: radius, type: type}) do
     post(
-      "maps/api/place/nearbysearch/json?location=#{lat},#{lng}&radius=#{radius}&type=#{type}&key=#{@key}"
+      "maps/api/place/nearbysearch/json?location=#{lat},#{lng}&radius=#{radius}&type=#{type}&key=#{@key}", []
     )
   end
 
@@ -34,6 +34,6 @@ defmodule GoogleDirectionsGenerator.Http do
   end
 
   def geo_locate() do
-    post("/geolocation/v1/geolocate?key=#{@key}")
+    post("/geolocation/v1/geolocate?key=#{@key}", [])
   end
 end
