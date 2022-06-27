@@ -21,7 +21,7 @@ you will need a google api key, you can add to your config ie.
 
 ```elixir
 def deps do
-  [{:google_directions_generator, "~> 0.1.0"}]
+  [{:google_directions_generator, "~> 0.2.0"}]
 end
 ```
 
