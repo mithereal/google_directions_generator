@@ -24,7 +24,7 @@ defmodule GoogleDirectionsGenerator.Http do
   end
 
   def fetch_lat_lng() do
-    {_, reply} = Tesla.get!("https://api.myip.com")
+    {_, reply} = Tesla.get("https://api.myip.com")
     {_, reply} = Jason.decode(reply.body)
     {_, ip_address} = Tesla.get("http://ipapi.co/#{reply["ip"]}/json")
     Tesla.get("http://ipapi.co/#{ip_address}/json")
