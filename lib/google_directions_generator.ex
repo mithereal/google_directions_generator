@@ -269,7 +269,7 @@ defmodule GoogleDirectionsGenerator do
   """
   def get_coords(data) do
     case data do
-      %{lat: lat, lng: lng, name: name} ->
+      %{lat: _lat, lng: _lng, name: _name} ->
         data
 
       _ ->
@@ -328,7 +328,7 @@ defmodule GoogleDirectionsGenerator do
 
     is_json =
       case decoded do
-        {:error, msg} -> false
+        {:error, _msg} -> false
         _ -> true
       end
 

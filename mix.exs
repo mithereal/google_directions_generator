@@ -17,13 +17,12 @@ defmodule GoogleDirectionsGenerator.Mixfile do
       aliases: aliases(),
       package: package(),
       preferred_cli_env: [
-        vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
+        vcr: :test,
+        "vcr.delete": :test,
+        "vcr.check": :test,
+        "vcr.show": :test
       ]
     ]
-  end
-
-  def application do
-    [extra_applications: [:logger]]
   end
 
   defp deps do
@@ -36,7 +35,7 @@ defmodule GoogleDirectionsGenerator.Mixfile do
       {:inch_ex, only: :docs},
       {:exvcr, "~> 0.11", only: :test},
       {:junit_formatter, "~> 3.3", only: [:test, :dev]},
-      {:assertions, "~> 0.19.0",  only: [:test, :dev]}
+      {:assertions, "~> 0.19.0", only: [:test, :dev]}
     ]
   end
 
