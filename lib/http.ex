@@ -19,15 +19,24 @@ defmodule GoogleDirectionsGenerator.Http do
 
   def nearby_search(%{lat: lat, lng: lng, radius: radius, type: type}) do
     post(
-      "maps/api/place/nearbysearch/json?location=#{lat},#{lng}&radius=#{radius}&type=#{type}&key=#{@key}", []
+      "maps/api/place/nearbysearch/json?location=#{lat},#{lng}&radius=#{radius}&type=#{type}&key=#{@key}",
+      []
     )
   end
 
-  def fetch_lat_lng() do
-    {_, reply} = Tesla.get("https://api.myip.com")
-    {_, reply} = Jason.decode(reply.body)
-    {_, ip_address} = Tesla.get("http://ipapi.co/#{reply["ip"]}/json")
-    Tesla.get("http://ipapi.co/#{ip_address}/json")
+  def fetch_lat_lng(ip \\ nil) do
+    ip =
+      case is_nil(ip) do
+        true ->
+          {_, reply} = Tesla.get("https://api.myip.com")
+          {_, result} = Jason.decode(reply.body)
+          result["ip"]
+
+        false ->
+          ip
+      end
+
+    Tesla.get("http://ipapi.co/#{ip}/json")
   end
 
   def push(url, params) do

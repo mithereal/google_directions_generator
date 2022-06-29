@@ -187,32 +187,41 @@ defmodule GoogleDirectionsGenerator do
 
     Http.push(url, Enum.join(params, "&"))
 
-    for _ <- 1..count do
-      {status, trip_coords} = random()
+    result =
+      for _ <- 1..count do
+        {status, trip_coords} = random()
 
-      case status do
-        :ok ->
-          Enum.each(trip_coords, fn x ->
-            params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+        case status do
+          :ok ->
+            Enum.each(trip_coords, fn x ->
+              params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
 
-            params = Enum.concat(custom_params_list, params)
+              params = Enum.concat(custom_params_list, params)
 
-            Http.push(url, Enum.join(params, "&"))
+              Http.push(url, Enum.join(params, "&"))
 
-            :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+              :timer.sleep(:timer.seconds(:rand.uniform(delay)))
 
-            params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
+              params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
 
-            params = Enum.concat(custom_params_list, params)
+              params = Enum.concat(custom_params_list, params)
 
-            Http.push(url, Enum.join(params, "&"))
+              Http.push(url, Enum.join(params, "&"))
 
-            :timer.sleep(:timer.seconds(:rand.uniform(delay)))
-          end)
+              :timer.sleep(:timer.seconds(:rand.uniform(delay)))
+            end)
 
-        :error ->
-          {:error, trip_coords}
+          :error ->
+            {:error, trip_coords}
+        end
       end
+
+    result
+    |> Enum.filter(fn x -> k == :ok end)
+
+    case Enum.count(result) do
+      0 -> :ok
+      result -> List.first(result)
     end
   end
 
