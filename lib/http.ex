@@ -7,14 +7,14 @@ defmodule GoogleDirectionsGenerator.Http do
   plug(Tesla.Middleware.BaseUrl, "https://maps.googleapis.com/")
 
   plug(Tesla.Middleware.Headers, [
-    {"user-agent", "Elixir - Google Directions Generator",
-     "Content-Type": "application/x-www-form-urlencoded"}
+    {"user-agent", "Elixir - Google Directions Generator"},
+    {"Content-Type", "application/x-www-form-urlencoded"}
   ])
 
   @key Application.get_env(:google_directions_generator, :api_key, "")
 
   def waypoints(%{origin: origin, destination: destination}) do
-    post("maps/api/directions/json?origin#{origin}&destination=#{origin}&key=#{@key}", [])
+    post("maps/api/directions/json?origin#{origin}&destination=#{destination}&key=#{@key}", [])
   end
 
   def nearby_search(%{lat: lat, lng: lng, radius: radius, type: type}) do
@@ -24,7 +24,10 @@ defmodule GoogleDirectionsGenerator.Http do
   end
 
   def fetch_lat_lng() do
-    Tesla.get("http://ipapi.co/8.8.8.8/json")
+    {_, reply} = Tesla.get!("https://api.myip.com")
+    {_, reply} = Jason.decode(reply.body)
+    {_, ip_address} = Tesla.get("http://ipapi.co/#{reply["ip"]}/json")
+    Tesla.get("http://ipapi.co/#{ip_address}/json")
   end
 
   def push(url, params) do

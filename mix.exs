@@ -15,7 +15,10 @@ defmodule GoogleDirectionsGenerator.Mixfile do
       name: "Google Directions Generator",
       source_url: "https://github.com/mithereal/ex_google_directions_generator",
       aliases: aliases(),
-      package: package()
+      package: package(),
+      preferred_cli_env: [
+        vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
+      ]
     ]
   end
 
@@ -30,7 +33,17 @@ defmodule GoogleDirectionsGenerator.Mixfile do
       {:jason, "~> 1.2"},
       {:hackney, "~> 1.17"},
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:inch_ex, only: :docs}
+      {:inch_ex, only: :docs},
+      {:exvcr, "~> 0.11", only: :test},
+      {:junit_formatter, "~> 3.3", only: [:test, :dev]},
+      {:assertions, "~> 0.19.0",  only: [:test, :dev]}
+    ]
+  end
+
+  def application do
+    [
+      extra_applications: [:logger],
+      mod: {GoogleDirectionsGenerator.Application, []}
     ]
   end
 

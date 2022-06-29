@@ -109,7 +109,7 @@ defmodule GoogleDirectionsGenerator do
   ## Send to the endpoint
   """
   def push(url, %{count: count, delay: delay}) do
-    reply = Http.fetch_lat_lng()
+    {_, reply} = Http.fetch_lat_lng()
 
     my_coords = decode_lat_long(reply)
 
@@ -137,7 +137,7 @@ defmodule GoogleDirectionsGenerator do
   end
 
   def push(url, %{count: count, delay: delay}, custom_params) do
-    reply = Http.fetch_lat_lng()
+    {_, reply} = Http.fetch_lat_lng()
 
     my_coords = decode_lat_long(reply)
 
@@ -159,6 +159,7 @@ defmodule GoogleDirectionsGenerator do
 
       Enum.each(trip_coords, fn x ->
         params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+
         params = Enum.concat(custom_params_list, params)
 
         Http.push(url, Enum.join(params, "&"))
@@ -193,6 +194,7 @@ defmodule GoogleDirectionsGenerator do
         :ok ->
           Enum.each(trip_coords, fn x ->
             params = ["lat=#{x.start_location.lat}", "lng=#{x.start_location.lng}"]
+
             params = Enum.concat(custom_params_list, params)
 
             Http.push(url, Enum.join(params, "&"))
@@ -200,6 +202,7 @@ defmodule GoogleDirectionsGenerator do
             :timer.sleep(:timer.seconds(:rand.uniform(delay)))
 
             params = ["lat=#{x.end_location.lat}", "lng=#{x.end_location.lng}"]
+
             params = Enum.concat(custom_params_list, params)
 
             Http.push(url, Enum.join(params, "&"))
@@ -218,7 +221,6 @@ defmodule GoogleDirectionsGenerator do
   """
   def random(radius \\ 5000) do
     result = Http.geo_locate()
-
     {status, decoded} = Jason.decode(result.body)
 
     case status do
@@ -241,11 +243,10 @@ defmodule GoogleDirectionsGenerator do
             %{"html_attributions" => [], "results" => [], "status" => "ZERO_RESULTS"} ->
               {status, reply} = random()
 
-              result =
-                case status do
-                  :ok -> reply
-                  :error -> []
-                end
+              case status do
+                :ok -> reply
+                :error -> []
+              end
 
             _ ->
               decoded_json["results"]
@@ -287,7 +288,7 @@ defmodule GoogleDirectionsGenerator do
   def create_route(locations \\ []) do
     case(Enum.count(locations) > 1) do
       true ->
-        [origin | destination] = Enum.chunk(locations, 2)
+        [origin | destination] = Enum.chunk_every(locations, 2)
 
         result = Http.waypoints(%{origin: origin, destination: destination})
 
@@ -331,24 +332,15 @@ defmodule GoogleDirectionsGenerator do
         _ -> true
       end
 
-    return =
-      case is_json do
-        false ->
-          %{lat: 0, lng: 0}
+    case is_json do
+      false ->
+        %{lat: 0, lng: 0}
 
-        true ->
-          lat = to_string(decoded["latitude"])
-          lng = to_string(decoded["longitude"])
-          region = to_string(decoded["region"])
-          region_code = to_string(decoded["region_code"])
-          country = to_string(decoded["country"])
-          country_name = to_string(decoded["country_name"])
-          postal = to_string(decoded["postal"])
-          timezone = to_string(decoded["timezone"])
-          asn = to_string(decoded["asn"])
-          org = to_string(decoded["org"])
+      true ->
+        lat = to_string(decoded["latitude"])
+        lng = to_string(decoded["longitude"])
 
-          %{lat: lat, lng: lng}
-      end
+        %{lat: lat, lng: lng}
+    end
   end
 end
