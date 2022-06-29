@@ -3,7 +3,7 @@ defmodule GoogleDirectionsGeneratorTest do
   alias GoogleDirectionsGenerator.Http
 
   test "GoogleDirectionsGenerator.run()" do
-    {status, reply} = GoogleDirectionsGenerator.run()
+    {status, _} = GoogleDirectionsGenerator.run()
 
     assert status == :ok
   end
