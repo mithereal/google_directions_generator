@@ -27,10 +27,11 @@ defmodule GoogleDirectionsGenerator.Mixfile do
 
   defp deps do
     [
-      {:google_maps, "~> 0.11.0"},
-      {:tesla, "~> 1.4"},
-      {:jason, "~> 1.2"},
-      {:hackney, "~> 1.17"},
+      {:google_maps, ">= 0.0.0"},
+      {:tesla, ">= 0.0.0"},
+      {:jason, ">= 0.0.0"},
+      {:hackney, ">= 0.0.0"},
+      {:maybe, "~> 1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:inch_ex, only: :docs},
       {:exvcr, "~> 0.11", only: :test},

@@ -1,8 +1,8 @@
 defmodule GoogleDirectionsGenerator do
   @moduledoc """
-  Generate Geoocords for random locations located nearby
+  Generate Geocoordinates for random locations located nearby
   """
-
+  import Maybe
   alias GoogleDirectionsGenerator.Http
 
   @types [
@@ -217,7 +217,7 @@ defmodule GoogleDirectionsGenerator do
       end
 
     result
-    |> Enum.filter(fn x -> k == :ok end)
+    |> Enum.filter(fn x -> x == :ok end)
 
     case Enum.count(result) do
       0 -> :ok
@@ -229,15 +229,15 @@ defmodule GoogleDirectionsGenerator do
   ## Get a random place geocoords based on starting location
   """
   def random(radius \\ 5000) do
-    result = Http.geo_locate()
+    {status, result} = Http.geo_locate()
     {status, decoded} = Jason.decode(result.body)
 
     case status do
       :ok ->
-        coords = decoded["location"]
+        coords = decoded.location
 
-        lat = to_string(coords["lat"])
-        lng = to_string(coords["lng"])
+        lat = to_string(coords.lat)
+        lng = to_string(coords.lng)
 
         type = Enum.random(@types)
 
@@ -258,7 +258,7 @@ defmodule GoogleDirectionsGenerator do
               end
 
             _ ->
-              decoded_json["results"]
+              decoded_json.results
           end
 
         locations =
@@ -269,7 +269,11 @@ defmodule GoogleDirectionsGenerator do
         create_route(locations)
 
       :error ->
-        {:error, decoded["message"]}
+        if maybe(decoded.message) do
+          {:error, decoded.message}
+        else
+          {:error, "Error Fetching Results"}
+        end
     end
   end
 
@@ -282,12 +286,12 @@ defmodule GoogleDirectionsGenerator do
         data
 
       _ ->
-        geometry = data["geometry"]
-        coords = geometry["location"]
-        name = data["name"]
-        vicinity = data["vicinity"]
+        geometry = data.geometry
+        coords = geometry.location
+        name = data.name
+        vicinity = data.vicinity
 
-        %{name: name, lat: coords["lat"], lng: coords["lng"], vicinity: vicinity}
+        %{name: name, lat: coords.lat, lng: coords.lng, vicinity: vicinity}
     end
   end
 
@@ -303,22 +307,24 @@ defmodule GoogleDirectionsGenerator do
 
         waypoints_json = Jason.decode!(result.body)
 
-        [routes] = waypoints_json["routes"]
+        [routes] = waypoints_json.routes
 
-        legs = routes["legs"]
+        legs = routes.legs
 
         steps =
           Enum.map(legs, fn x ->
-            x["steps"]
+            x.steps
           end)
+
+        # Map.get(x, "start_location")
 
         waypoints =
           List.flatten(steps)
           |> Enum.map(fn x ->
-            start_loc = Map.get(x, "start_location")
-            start_map = %{lat: start_loc["lat"], lng: start_loc["lng"]}
-            end_loc = Map.get(x, "end_location")
-            end_map = %{lat: end_loc["lat"], lng: end_loc["lng"]}
+            start_loc = x.start_location
+            start_map = %{lat: start_loc.lat, lng: start_loc.lng}
+            end_loc = x.end_location
+            end_map = %{lat: end_loc.lat, lng: end_loc.lng}
             %{start_location: start_map, end_location: end_map}
           end)
 
@@ -346,8 +352,8 @@ defmodule GoogleDirectionsGenerator do
         %{lat: 0, lng: 0}
 
       true ->
-        lat = to_string(decoded["latitude"])
-        lng = to_string(decoded["longitude"])
+        lat = to_string(decoded.latitude)
+        lng = to_string(decoded.longitude)
 
         %{lat: lat, lng: lng}
     end

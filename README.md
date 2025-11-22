@@ -9,7 +9,7 @@
 ### This is an app for testing api's
 
 #### This will use google locations to fetch the geo-coords for driving directions between random multiple locations near a ip geo location
-###### This was created to simulate a vehicle driving between multiple locations so we can send the geo-coords to an endpoint
+###### This was created to simulate requests from a mobile device for a vehicle driving between multiple locations so we can send the geo-coords to an endpoint.
 
 ## Installation
 

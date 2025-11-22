@@ -11,7 +11,7 @@ defmodule GoogleDirectionsGenerator.Http do
     {"Content-Type", "application/x-www-form-urlencoded"}
   ])
 
-  @key Application.get_env(:google_directions_generator, :api_key, "")
+  @key Application.compile_env(:google_directions_generator, :api_key, "")
 
   def waypoints(%{origin: origin, destination: destination}) do
     post("maps/api/directions/json?origin#{origin}&destination=#{destination}&key=#{@key}", [])

@@ -10,8 +10,7 @@ defmodule GoogleDirectionsGeneratorTest do
 
   @tag timeout: 120_000
   test "GoogleDirectionsGenerator push to endpoint " do
-
-    {_,origin} =  Http.fetch_lat_lng()
+    {_, origin} = Http.fetch_lat_lng()
 
     destination_url = "127.0.0.1"
     count = 1
@@ -19,8 +18,12 @@ defmodule GoogleDirectionsGeneratorTest do
     custom_params = []
 
     {status, _} =
-      GoogleDirectionsGenerator.push(destination_url, %{count: count, delay: delay}, custom_params, origin)
-
+      GoogleDirectionsGenerator.push(
+        destination_url,
+        %{count: count, delay: delay},
+        custom_params,
+        origin
+      )
 
     assert status == :error
   end
